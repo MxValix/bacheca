@@ -39,3 +39,50 @@ button, button:focus{
     box-shadow: none;
     border:none;
 }
+
+
+
+
+.fab {
+    cursor: pointer;
+  }
+  .fab-backdrop {
+    color: rgba(255, 255, 255, 0);
+  }
+  .fab-primary, .fab-secondary {
+    transition: all 0.35s ease-in-out;
+  }
+  .fab.active .fab-primary {
+    opacity: 0;
+    transform: rotate(225deg);
+  }
+  .fab-secondary {
+    opacity: 0;
+    transform: rotate(-225deg);
+  }
+  .fab.active .fab-secondary {
+    opacity: 1;
+    transform: rotate(0);
+    margin-top: -2px;
+  }
+  
+  
+  
+  
+  #inbox .show-on-hover {
+      position: absolute;
+      bottom: 80px;
+      right: 80px;
+  }
+  #inbox .btn-io{
+      border-radius: 50%;
+      height: 54px;
+      width: 54px;
+      padding: 0 !important;
+      box-shadow: 0px 3px 7px 0px rgba(202, 124, 124, 0.72);
+  }
+  
+  
+  #inbox .fa-iox{
+      font-size: 22px;
+  }

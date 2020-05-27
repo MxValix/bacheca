@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Template bootstrap</title>
@@ -8,29 +9,36 @@
     <link rel="stylesheet" href="../css/fontawesome-free-5.13.0-web/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
+
     <div class="container">
         <div class="row">
-            <div class="col12">
-                <button id="plus-circle-btn">
-                    <span id="plus-circle">
-                        <i class="fas fa-plus-circle rounded-circle"></i>
-                    </span>
-                </button>        
-            </div>
-        </div>
-        <div class="col10"></div>
-    </div>  
-        <div class="container">
-            <div class="row hidden-xs" id="aggiungi-qui">
+            <div id="inbox">
+                <div class="fab show-on-hover">
+                    <button type="button" class="btn btn-success btn-io" id="plus-circle-btn">
+                        <span class="fa-stack fa-2x">
+                            <i class="fa fa-plus fa-stack-1x fa-inverse fab-primary"></i>
+                        </span>
+                    </button></div>
 
             </div>
-          </div>
+        </div>
+    </div>
+
+    <div class="col10"></div>
+    </div>
+    <div class="container">
+        <div class="row hidden-xs" id="aggiungi-qui">
+
+        </div>
+    </div>
 
     <!-- link prima jQuery e poi Bootstrap -->
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/jquery-3.5.1.min.js"></script>
-    <!-- altri script vanno qui, dopo Bootstrap -->    
+    <!-- altri script vanno qui, dopo Bootstrap -->
     <script src="../js/script.js"></script>
 </body>
+
 </html>

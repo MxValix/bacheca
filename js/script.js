@@ -24,5 +24,14 @@ $(document).ready(function(){
         $(txtArea).focus();  
     })
 
+    $(document).on("click", ".elimina", function(){
+        $(this).parent().remove;
+    })
+
+    $(document).on("click", ".modifica", function(){
+
+        let txtArea = "#txt-" + contatore;
+        $(txtArea).focus();  
+    })
 
 })

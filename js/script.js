@@ -5,6 +5,52 @@ let bgColor = 0;
 let modifica = false;
 let idMod = 0;
 let colori = ["#ffb3ba", "#ffdfba", "#ffffba", "#baffc9", "#bae1ff", "#b7ded2", "#f6a6b2", "#f7c297", "#ffecb8", "#90d2d8"];
+
+// prendo l'id dall'elemento su cui chiamo la funzione e restituisco l'id numerico
+function splitIdFromThis(splitId){
+    let id = $(splitId).attr("id");
+    let salvaId = id.split("-");
+    id = salvaId[1];
+    return id;
+}
+
+/*
+    prendo l'id numerico dell'elemento txtArea che mi interessa ed effettuo le operazioni di cui ho bisogno, restituisco txtArea alla funzione jQuery chiamante
+*/
+function setTxtArea(id){
+    let txtArea = "#txt-" + id;
+    //se modifica è falso, allora significa che la funzione jQuery chiamante è "salva"
+    if (modifica==false){
+        //disabilito la possibilità di poter scrivere nella textarea
+        $(txtArea).prop("disabled", true);
+        //do una dimensione del 75% di altezza di tutta la note alla textarea
+        $(txtArea).css("height", "75%");
+    } else {
+        //in questo caso significa che la funzione jQuery chiamante è "modifica"
+        //riabilito la textArea in modo tale da poter effettuare modifiche alla nota
+        $(txtArea).prop("disabled", false);
+        /* riduco la dimensione della textarea al 40% sulla dimensione totale per fare spazio
+          ai bottoni per la dimensione del font e del colore */  
+        $(txtArea).css("height", "40%");
+    }
+    if (fontSize!=0){
+        let setSize = 0;
+        if (fontSize == "btns") setSize = "10px";
+        else if (fontSize == "btnm") setSize = "18px";
+        else setSize = "25px";
+        $(txtArea).css("font-size", setSize);
+        fontSize = 0;
+    }
+    if(bgColor!=0){
+        let colId = "#col-" + id;
+        $(colId).css("background-color", bgColor);
+        $(txtArea).css("background-color", bgColor);
+        bgColor = 0;
+    }
+    return txtArea;
+}
+
+
 $(document).ready(function () {
     
     $("#plus-circle-btn").click(function (event) {
@@ -56,10 +102,6 @@ $(document).ready(function () {
         }
         else {
             modifica = false;
-            
-            $(txtArea).css("height", "70%");
-
-            $(salvaId).show();
 
         }
         $("#aggiungi-qui").append(aggiungiDiv);
@@ -68,34 +110,15 @@ $(document).ready(function () {
     })
 
     $(document).on("click", ".salva", function () {
-        let id = $(this).attr("id");
-        let salvaId = id.split("-");
-        id = salvaId[1];
-        let txtArea = "#txt-" + id;
+        let id = splitIdFromThis(this);        
+        console.log(id);
+        let txtArea = setTxtArea(id);
         let fontDiv = "#fontdiv-" + id;
         let colorDiv = "#colordiv-" + id;
-        $(txtArea).prop("disabled", true);
         $(fontDiv).css("visibility", "hidden");
         $(colorDiv).css("visibility", "hidden");
         $(this).hide();
-        if (fontSize!=0){
-            let setSize = 0;
-            if (fontSize == "btns") setSize = "10px";
-            else if (fontSize == "btnm") setSize = "18px";
-            else setSize = "25px";
-            $(txtArea).css("font-size", setSize);
-            fontSize = 0;
-        }
-        if(bgColor!=0){
-            let colId = "#col-" + id;
-            $(colId).css("background-color", bgColor);
-            $(txtArea).css("background-color", bgColor);
-            bgColor = 0;
-        
-        }
-        $(txtArea).css("height", "75%");
 
-        
         let aggiungiModificaElimina = ` <button type="button" id="modifica-${id}" 
                                     class="btn btn-sm bg-success text-white text-uppercase modifica">
                                     Modifica
@@ -113,15 +136,10 @@ $(document).ready(function () {
     });
 
     $(document).on("click", ".modifica", function () {
-        let id = $(this).attr("id");
-        let modificaId = id.split("-");
-        id = modificaId[1];
-        let txtArea = "#txt-" + id;
-        $(txtArea).prop("disabled", false);
-        $(txtArea).css("height", "40%");
-
         modifica = true;
-        idMod = id;
+        let id =  splitIdFromThis(this);
+        console.log(id);
+        let txtArea = setTxtArea(id);
         let fontDiv = "#fontdiv-" + id;
         let colorDiv = "#colordiv-" + id;
         let modificaBtn = "#modifica-" + id;
@@ -133,7 +151,7 @@ $(document).ready(function () {
         $(eliminaBtn).hide();
         $(salvaId).text("Salva modifiche");
         $(salvaId).show();
-
+        idMod = id;
         $("#fakebtn").trigger("click");
     });
 

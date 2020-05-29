@@ -71,24 +71,34 @@ function setTxtArea(id) {
     //come valore di ritorno passo l'id alfanumerico della textarea interessata
     return txtArea;
 }
-
+//la funzione showHideSalva, a cui passo l'id, in base al booleano di modifica, mostra e nasconde dei bottoni
 function showHideSalva(id) {
+    //inizializzo delle variabili contenenti gli id alfanumerici interessati, a partire dall'id numerico
     let salvaId = "#salva-" + id;
     let fontDiv = "#fontdiv-" + id;
     let colorDiv = "#colordiv-" + id;
+    //se la modifica è false, allora sto salvando, ed entro nella condizione
     if (modifica == false) {
+        //nascondo gli elementi per la modifica della dimensione del font e del colore di background
         $(fontDiv).css("visibility", "hidden");
         $(colorDiv).css("visibility", "hidden");
+        //nascondo il bottone "salva"
         $(salvaId).hide();
     }
+    //se la modifica è true, allora sto modificando, ed entro in questa condizione
     else {
+        //inizializzo localmente queste variabili perché nel caso di "salva" non mi interessano
         let modificaBtn = "#modifica-" + id;
         let eliminaBtn = "#elimina-" + id;
+        //rendo visibili gli elementi relativi alle dimensioni del font e la scelta del colore di background
         $(fontDiv).css("visibility", "visible");
         $(colorDiv).css("visibility", "visible");
+        //nascondo i bottoni relativi alla modifica e cancellazione della nota
         $(modificaBtn).hide();
         $(eliminaBtn).hide();
+        //modifico il testo del bottone salva da "salva nota" a "salva modifiche", poiché in questo caso la nota già esisteva
         $(salvaId).text("Salva modifiche");
+        //mostro di nuovo il bottone salva, con il nuovo testo
         $(salvaId).show();
     }
 }

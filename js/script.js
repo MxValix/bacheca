@@ -172,14 +172,10 @@ $(document).ready(function () {
     //bottone definito nel documento HTML che viene premuto dall'utente per creare una nuova nota
     $("#plus-circle-btn").click(function (event) {
         event.preventDefault();
-        //salva nella variabile idCorrente il valore della variabile globale counter
-        idCorrente = counter;
-        //incrementa counter di uno
-        counter++;
         //mi creo l'id della textarea corrente
-        let txtArea = "#txt-" + idCorrente;
-        //chiamo la funzione creaDiv a cui passo l'idCorrente (numerico), che mi ritorna la template string da inserire nel documento HTML
-        let aggiungiDiv = creaDiv(idCorrente);
+        let txtArea = "#txt-" + counter;
+        //chiamo la funzione creaDiv a cui passo il contatore (numerico), che mi ritorna la template string da inserire nel documento HTML
+        let aggiungiDiv = creaDiv(counter);
         //metto il contenuto della nuova nota nel mio div con id "#aggiungi-qui", ad ogni nuova nota, si aggiunge un figlio al div
         $("#aggiungi-qui").append(aggiungiDiv);
         //con questo mi garantisco che ogni volta che si crea una nuova nota, la textarea è già pronta a ricevere l'input dell'utente
@@ -191,39 +187,64 @@ $(document).ready(function () {
         if (n == 5) $("#plus-circle-btn").hide();
         //prima di uscire dalla funzione di creazione di una nuova nota, incremento il contatore n di 1
         n++;
+        //incremento counter di 1
+        counter++;
     })
 
+    //la funzione salva si occupa del salvataggio di una nuova nota o di una nota esistente
     $(document).on("click", ".salva", function () {
+        //chiamo la funzione che a partire dall'elemento this, mi ritorna l'id numerico e lo salvo in id
         let id = splitIdFromThis(this);
+        //mi genero l'id alfanumerico della textarea interessata e lo salvo in txtarea
         let txtArea = setTxtArea(id);
+        //chiamo la funzione showHideSalva, a cui passo l'id numerico corrente, che si occupa di nascondere gli elementi relativi al salvataggio di una nota
         showHideSalva(id);
+        //chiamo la funzione aggiungiModificaElimina, a cui passo l'id numero e l'id alfanumerico di textarea, e si occupa di mostrare i bottoni di modifica e cancellazione
         aggiungiModificaElimina(id, txtArea);
     });
 
+    //la funzione elimina, si occupa della cancellazione di una nota
     $(document).on("click", ".elimina", function () {
+        //in questo modo, a partire dal bottone elimina, cancello il padre (ovvero il div col-idCorrente) e tutti i suoi figli
         $(this).parent().remove();
+        //decremento n di 1, perché è il contatore di note create, ed alla eliminazione di una nota, si libera un posto
         n = n - 1;
+        //se il limite massimo di note era stato raggiunto, il bottone era stato nascosto, allora in questo modo lo mostro di nuovo a video
         if (n == 5) $("#plus-circle-btn").show();
     });
 
+
+    //quando l'utente preme sul bottone modifica, entro in questa funzione
     $(document).on("click", ".modifica", function () {
+        //setto la variabile booleana di modifica su true
         modifica = true;
+        //chiamo la funzione che a partire dall'elemento this, mi ritorna l'id numerico e lo salvo in id
         let id = splitIdFromThis(this);
+        //mi genero l'id alfanumerico della textarea interessata e lo salvo in txtarea
         let txtArea = setTxtArea(id);
+        //chiamo la funzione showHideSalva, a cui passo l'id numerico corrente, che si occupa di mostrare i bottoni relativi al salvataggio
         showHideSalva(id);
-        idCorrente = id;
-        $(txtArea).focus();
+        //con questo mi garantisco che ogni volta che si modifica la nota, la textarea è già pronta a ricevere l'input dell'utente
+        $(txtArea).focus();    
+        //termino le modifiche e setto la variabile booleana di modifica a false   
         modifica = false;
     });
 
+    //quando l'utente preme su uno dei bottoni per la scelta della dimensione del font, entro in questa funzione
     $(document).on("click", ".fsize", function () {
+        //prendo l'id dell'elemento
         let id = $(this).attr("id");
+        //faccio lo split sul -
         let fsizeId = id.split("-");
+        //prendo la prima parte dell'array, quella antecedente al trattino, (btns, btnm o btnl) e lo salvo nella variabile globale fontSize
         fontSize = fsizeId[0];
     })
 
+    //quando l'utente cambia il colore da input color, entro in questa funzione
     $(document).on("change", ".cambiacolore", function () {
+        //prendo il valore dall'input
         let value = $(this).val();
+        //salvo il valore dell'input nella variabile globale bgColor
         bgColor = value;
     })
 

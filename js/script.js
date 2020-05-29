@@ -4,8 +4,18 @@
 let counter = 0;
 //mi serve per capire quante note sono state create, e come indice del mio array
 let n = 0;
+/* 
+  fontSize mi serve per salvarmi il valore relativa alle dimensioni del font, inizializzato a 0
+  se è 0 o null, allora prende il valore di default, altrimenti btns per small, btnm per medium e btnl per large
+*/
 let fontSize = 0;
+/* 
+    bgColor viene utilizzato in modo simile a fontSize, inizializzato a 0, 
+    se gli viene associato un valore, tramite input color, allora assumere il valore esadecimale corrispondente
+*/
 let bgColor = 0;
+
+//booleano che in ogni passo del codice mi dice se sto effettuando l'inserimento di una nuova nota o una modifica
 let modifica = false;
 
 // prendo l'id dall'elemento su cui chiamo la funzione e restituisco l'id numerico
@@ -17,7 +27,8 @@ function splitIdFromThis(splitId) {
 }
 
 /*
-    prendo l'id numerico dell'elemento txtArea che mi interessa ed effettuo le operazioni di cui ho bisogno, restituisco txtArea alla funzione jQuery chiamante
+    prendo l'id numerico dell'elemento textarea che mi interessa ed effettuo le operazioni 
+    di cui ho bisogno, restituisco txtArea alla funzione jQuery chiamante
 */
 function setTxtArea(id) {
     let txtArea = "#txt-" + id;
@@ -35,20 +46,29 @@ function setTxtArea(id) {
           ai bottoni per la dimensione del font e del colore */
         $(txtArea).css("height", "40%");
     }
+    //se fontSize è = 0 allora il valore della dimensione del font non è cambiata, non devo far nulla
     if (fontSize != 0) {
+        //se fontSize è diverso da 0, verifico qual è il suo valore
         let setSize = 0;
         if (fontSize == "btns") setSize = "10px";
         else if (fontSize == "btnm") setSize = "18px";
         else setSize = "25px";
+        // dopo aver salvato il valore scelto dall'utente in setSize, procedo ad inserirlo nel css della nota corrispondente
         $(txtArea).css("font-size", setSize);
+        //re-inizializzo fontSize a 0 per gli inserimenti e le modifiche successive
         fontSize = 0;
     }
+    //molto simile a fontSize, se bgColor è zero allora il colore di sfondo della nota resta quello assegnato di default
     if (bgColor != 0) {
+        // se bgColor è diverso da 0, allora recupero l'id di col (il div contenitore di tutta la nota)
         let colId = "#col-" + id;
+        //assegno lo stesso colore di sfondo sia al div con id col-idcorrente, sia alla sua textarea
         $(colId).css("background-color", bgColor);
         $(txtArea).css("background-color", bgColor);
+        //re-inizializzo bgColor a 0 per gli inserimenti e le modifiche successive
         bgColor = 0;
     }
+    //come valore di ritorno passo l'id alfanumerico della textarea interessata
     return txtArea;
 }
 

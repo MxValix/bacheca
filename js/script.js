@@ -3,8 +3,6 @@ let n = -1;
 let fontSize = 0;
 let bgColor = 0;
 let modifica = false;
-let idMod = 0;
-let colori = ["#ffb3ba", "#ffdfba", "#ffffba", "#baffc9", "#bae1ff", "#b7ded2", "#f6a6b2", "#f7c297", "#ffecb8", "#90d2d8"];
 
 // prendo l'id dall'elemento su cui chiamo la funzione e restituisco l'id numerico
 function splitIdFromThis(splitId){
@@ -72,14 +70,14 @@ function showHideSalva(id){
 }
 
 function creaDiv(id){
-    if (n == 9) n = 0;
-    else n++;
+    let colore = randomColor();
+    if (n==5) $("#plus-circle-btn").hide();
     aggiungiDiv =
     `   
     <div class="col-sm-4" id="col-${id}" 
-    style="background-color:${colori[n]}; border:3px solid white;   border-collapse: collapse">
+    style="background-color:${colore}; border:3px solid white;   border-collapse: collapse">
     <textarea class="txtarea mt-3" id="txt-${id}" 
-        style="background-color:${colori[n]}"></textarea>
+        style="background-color:${colore}"></textarea>
             <div class="btn-group d-block pb-2" id="fontdiv-${id}">            
                 <button class="fsize" id="btns-${id}">
                     <span class="ssize" id="spans-${id}" 
@@ -120,6 +118,13 @@ function aggiungiModificaElimina(id, txtArea){
     $(aggiungiModificaElimina).insertAfter(txtArea);
 }
 
+
+function randomColor(){
+    let colori = ["#ffb3ba", "#ffdfba", "#ffffba", "#baffc9", "#bae1ff", "#b7ded2"];
+    colore = colori[++n];
+    return colore;
+}
+
 $(document).ready(function () {
     
     $("#plus-circle-btn").click(function (event) {
@@ -142,15 +147,16 @@ $(document).ready(function () {
 
     $(document).on("click", ".elimina", function () {
         $(this).parent().remove();
+        if (n==5) $("#plus-circle-btn").show();
+        n = n-1;
     });
 
     $(document).on("click", ".modifica", function () {
         modifica = true;
         let id =  splitIdFromThis(this);
         let txtArea = setTxtArea(id);
-        idMod = id;
         showHideSalva(id);
-        idCorrente = idMod;
+        idCorrente = id;
         $(txtArea).focus();
         modifica = false;
     });

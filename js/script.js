@@ -50,76 +50,65 @@ function setTxtArea(id){
     return txtArea;
 }
 
-
-$(document).ready(function () {
-    
-    $("#plus-circle-btn").click(function (event) {
-        $("#fakebtn").trigger("click");
-    })
-
-    $("#fakebtn").click(function (event) {
-        if (modifica==false){
-            contatore = counter;
-            counter++;
-        }
-        else contatore = idMod;
-        event.preventDefault();
-        if (n == 9) n = 0;
-        else n++;
-        let aggiungiDiv;
-        if (modifica==false){
-        
-            aggiungiDiv =
-            `   
-            <div class="col-sm-4" id="col-${contatore}" 
-            style="background-color:${colori[n]}; border:3px solid white;   border-collapse: collapse">
-            <textarea class="txtarea mt-3" id="txt-${contatore}" 
-                style="background-color:${colori[n]}"></textarea>
-                    <div class="btn-group d-block pb-2" id="fontdiv-${contatore}">            
-                        <button class="fsize" id="btns-${contatore}">
-                            <span class="ssize" id="spans-${contatore}" 
-                                style="font-size:10px">Abc</span>
-                        </button>
-                        <button class="fsize" id="btnm-${contatore}">
-                            <span class="ssize" id="spanm-${contatore}" 
-                                style="font-size:18px">Abc</span>
-                        </button>
-                        <button class="fsize" id="btnl-${contatore}">
-                            <span class="ssize" id="spanl-${contatore}" 
-                                style="font-size:25px">Abc</span>
-                        </button>
-                    </div>
-                    <div class="form-group row" id="colordiv-${contatore}">
-                        <label for="cambiacolore${contatore}" class="col-4 col-form-label">Sfondo:</label>
-                        <input type="color" id="cambiacolore${contatore}" value="#563d7c" class="cambiacolore col-6 offset-1 form-control">
-                    </div>
-            <button type="button" id="salva-${contatore}" 
-                class="btn btn-sm bg-success text-white text-uppercase salva">
-                    Salva nota
-            </button>
-        </div>
-            `;
-        }
-        else {
-            modifica = false;
-
-        }
-        $("#aggiungi-qui").append(aggiungiDiv);
-        let txtArea = "#txt-" + contatore;
-        $(txtArea).focus();
-    })
-
-    $(document).on("click", ".salva", function () {
-        let id = splitIdFromThis(this);        
-        console.log(id);
-        let txtArea = setTxtArea(id);
-        let fontDiv = "#fontdiv-" + id;
-        let colorDiv = "#colordiv-" + id;
+function showHideSalva(id){
+    let salvaId = "#salva-" + id;
+    let fontDiv = "#fontdiv-" + id;
+    let colorDiv = "#colordiv-" + id;
+    if (modifica==false){
         $(fontDiv).css("visibility", "hidden");
         $(colorDiv).css("visibility", "hidden");
-        $(this).hide();
+        $(salvaId).hide();
+    }
+    else {
+        let modificaBtn = "#modifica-" + id;
+        let eliminaBtn = "#elimina-" + id;
+        $(fontDiv).css("visibility", "visible");
+        $(colorDiv).css("visibility", "visible");
+        $(modificaBtn).hide();
+        $(eliminaBtn).hide();
+        $(salvaId).text("Salva modifiche");
+        $(salvaId).show();
+    }    
+}
 
-        let aggiungiModificaElimina = ` <button type="button" id="modifica-${id}" 
+function creaDiv(id){
+    if (n == 9) n = 0;
+    else n++;
+    aggiungiDiv =
+    `   
+    <div class="col-sm-4" id="col-${id}" 
+    style="background-color:${colori[n]}; border:3px solid white;   border-collapse: collapse">
+    <textarea class="txtarea mt-3" id="txt-${id}" 
+        style="background-color:${colori[n]}"></textarea>
+            <div class="btn-group d-block pb-2" id="fontdiv-${id}">            
+                <button class="fsize" id="btns-${id}">
+                    <span class="ssize" id="spans-${id}" 
+                        style="font-size:10px">Abc</span>
+                </button>
+                <button class="fsize" id="btnm-${id}">
+                    <span class="ssize" id="spanm-${id}" 
+                        style="font-size:18px">Abc</span>
+                </button>
+                <button class="fsize" id="btnl-${id}">
+                    <span class="ssize" id="spanl-${id}" 
+                        style="font-size:25px">Abc</span>
+                </button>
+            </div>
+            <div class="form-group row" id="colordiv-${id}">
+                <label for="cambiacolore${id}" class="col-4 col-form-label">Sfondo:</label>
+                <input type="color" id="cambiacolore${id}" value="#563d7c" class="cambiacolore col-6 offset-1 form-control">
+            </div>
+    <button type="button" id="salva-${id}" 
+        class="btn btn-sm bg-success text-white text-uppercase salva">
+            Salva nota
+    </button>
+</div>
+    `;
+    return aggiungiDiv;
+}
+
+function aggiungiModificaElimina(id, txtArea){
+    let aggiungiModificaElimina = ` <button type="button" id="modifica-${id}" 
                                     class="btn btn-sm bg-success text-white text-uppercase modifica">
                                     Modifica
                                 </button>
@@ -128,7 +117,27 @@ $(document).ready(function () {
                                 Elimina
                             </button>
                                  `
-        $(aggiungiModificaElimina).insertAfter(txtArea);
+    $(aggiungiModificaElimina).insertAfter(txtArea);
+}
+
+$(document).ready(function () {
+    
+    $("#plus-circle-btn").click(function (event) {
+        event.preventDefault();
+        idCorrente = counter;
+        counter++;
+        let txtArea = "#txt-" + idCorrente;
+        let aggiungiDiv;
+        aggiungiDiv = creaDiv(idCorrente);
+        $("#aggiungi-qui").append(aggiungiDiv);
+        $(txtArea).focus();
+    })
+
+    $(document).on("click", ".salva", function () {
+        let id = splitIdFromThis(this);        
+        let txtArea = setTxtArea(id);
+        showHideSalva(id);
+        aggiungiModificaElimina(id, txtArea);
     });
 
     $(document).on("click", ".elimina", function () {
@@ -138,34 +147,23 @@ $(document).ready(function () {
     $(document).on("click", ".modifica", function () {
         modifica = true;
         let id =  splitIdFromThis(this);
-        console.log(id);
         let txtArea = setTxtArea(id);
-        let fontDiv = "#fontdiv-" + id;
-        let colorDiv = "#colordiv-" + id;
-        let modificaBtn = "#modifica-" + id;
-        let eliminaBtn = "#elimina-" + id;
-        let salvaId = "#salva-" + id;
-        $(fontDiv).css("visibility", "visible");
-        $(colorDiv).css("visibility", "visible");
-        $(modificaBtn).hide();
-        $(eliminaBtn).hide();
-        $(salvaId).text("Salva modifiche");
-        $(salvaId).show();
         idMod = id;
-        $("#fakebtn").trigger("click");
+        showHideSalva(id);
+        idCorrente = idMod;
+        $(txtArea).focus();
+        modifica = false;
     });
 
     $(document).on("click", ".fsize", function(){
         let id = $(this).attr("id");
         let fsizeId = id.split("-");
-        fontSize = fsizeId[0];
+        fontSize = fsizeId[0];        
     })
 
     $(document).on("change", ".cambiacolore", function(){
         let value = $(this).val();
         bgColor = value;
     })
-
-    
 
 })

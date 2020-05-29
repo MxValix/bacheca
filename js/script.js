@@ -123,46 +123,45 @@ function creaDiv(id) {
         di fontdiv (per la dimensione del font della singola nota), il div di colorDiv con gli elementi di colordiv
         (per il colore di sfondo della singola nota) ed il bottone salva, per salvare la nota con le eventuali preferenze
     */
-    aggiungiDiv =
-        `   
-    <div class="col-sm-4" id="col-${id}" 
-        style="background-color:${colore}; border:3px solid white;border-collapse: collapse">
-        <textarea class="txtarea mt-3" id="txt-${id}" 
-            style="background-color:${colore}"></textarea>
-        <div class="btn-group d-block pb-2" id="fontdiv-${id}">            
-            <button class="fsize" id="btns-${id}">
-                <span class="ssize" id="spans-${id}" style="font-size:10px">Abc</span>
+    aggiungiDiv = `   
+        <div class="col-sm-4" id="col-${id}" 
+            style="background-color:${colore}; border:3px solid white;border-collapse: collapse">
+            <textarea class="txtarea mt-3" id="txt-${id}" 
+                style="background-color:${colore}"></textarea>
+            <div class="btn-group d-block pb-2" id="fontdiv-${id}">            
+                <button class="fsize" id="btns-${id}">
+                    <span class="ssize" id="spans-${id}" style="font-size:10px">Abc</span>
+                </button>
+                <button class="fsize" id="btnm-${id}">
+                    <span class="ssize" id="spanm-${id}" style="font-size:18px">Abc</span>
+                </button>
+                <button class="fsize" id="btnl-${id}">
+                    <span class="ssize" id="spanl-${id}" style="font-size:25px">Abc</span>
+                </button>
+            </div>
+            <div class="form-group row" id="colordiv-${id}">
+                <label for="cambiacolore${id}" class="col-4 col-form-label">Sfondo:</label>
+                <input type="color" id="cambiacolore${id}" value="#563d7c" class="cambiacolore col-6 offset-1 form-control">
+            </div>
+            <button type="button" id="salva-${id}" class="btn btn-sm bg-success text-white text-uppercase salva">
+                Salva nota
             </button>
-            <button class="fsize" id="btnm-${id}">
-                <span class="ssize" id="spanm-${id}" style="font-size:18px">Abc</span>
-            </button>
-            <button class="fsize" id="btnl-${id}">
-                <span class="ssize" id="spanl-${id}" style="font-size:25px">Abc</span>
-            </button>
-        </div>
-        <div class="form-group row" id="colordiv-${id}">
-            <label for="cambiacolore${id}" class="col-4 col-form-label">Sfondo:</label>
-            <input type="color" id="cambiacolore${id}" value="#563d7c" class="cambiacolore col-6 offset-1 form-control">
-        </div>
-        <button type="button" id="salva-${id}" class="btn btn-sm bg-success text-white text-uppercase salva">
-            Salva nota
-        </button>
-    </div>
-    `;
+        </div> `;
     //ritorna la template string alla funzione chiamante
     return aggiungiDiv;
 }
 
+//questa funzione, a cui passo l'id corrente e il valore della textArea corrente aggiunge i bottoni modifica ed elimina
 function aggiungiModificaElimina(id, txtArea) {
-    let aggiungiModificaElimina = ` <button type="button" id="modifica-${id}" 
-                                    class="btn btn-sm bg-success text-white text-uppercase modifica">
-                                    Modifica
-                                </button>
-                                <button type="button" id="elimina-${id}" 
-                                class="btn btn-sm bg-danger text-white text-uppercase elimina">
-                                Elimina
-                            </button>
-                                 `
+    let aggiungiModificaElimina = ` 
+        <button type="button" id="modifica-${id}" 
+            class="btn btn-sm bg-success text-white text-uppercase modifica">
+            Modifica
+        </button>
+        <button type="button" id="elimina-${id}" 
+            class="btn btn-sm bg-danger text-white text-uppercase elimina">
+            Elimina
+        </button>`;
     $(aggiungiModificaElimina).insertAfter(txtArea);
 }
 
@@ -170,16 +169,27 @@ function aggiungiModificaElimina(id, txtArea) {
 
 $(document).ready(function () {
 
+    //bottone definito nel documento HTML che viene premuto dall'utente per creare una nuova nota
     $("#plus-circle-btn").click(function (event) {
         event.preventDefault();
+        //salva nella variabile idCorrente il valore della variabile globale counter
         idCorrente = counter;
+        //incrementa counter di uno
         counter++;
+        //mi creo l'id della textarea corrente
         let txtArea = "#txt-" + idCorrente;
-        let aggiungiDiv;
-        aggiungiDiv = creaDiv(idCorrente);
+        //chiamo la funzione creaDiv a cui passo l'idCorrente (numerico), che mi ritorna la template string da inserire nel documento HTML
+        let aggiungiDiv = creaDiv(idCorrente);
+        //metto il contenuto della nuova nota nel mio div con id "#aggiungi-qui", ad ogni nuova nota, si aggiunge un figlio al div
         $("#aggiungi-qui").append(aggiungiDiv);
+        //con questo mi garantisco che ogni volta che si crea una nuova nota, la textarea è già pronta a ricevere l'input dell'utente
         $(txtArea).focus();
+        /* 
+            se la mia variabile globale n è uguale a 5, significa che ho raggiunto il limite di note possibili da aggiungere 
+            ed allora nascondo il bottone che mi permette di creare una nuova nota
+        */
         if (n == 5) $("#plus-circle-btn").hide();
+        //prima di uscire dalla funzione di creazione di una nuova nota, incremento il contatore n di 1
         n++;
     })
 

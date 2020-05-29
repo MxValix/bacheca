@@ -1,11 +1,15 @@
+//inizializzo le variabili globali
+
+//il contatore mi serve per tenere traccia dell'id corrente
 let counter = 0;
-let n = -1;
+//mi serve per capire quante note sono state create, e come indice del mio array
+let n = 0;
 let fontSize = 0;
 let bgColor = 0;
 let modifica = false;
 
 // prendo l'id dall'elemento su cui chiamo la funzione e restituisco l'id numerico
-function splitIdFromThis(splitId){
+function splitIdFromThis(splitId) {
     let id = $(splitId).attr("id");
     let salvaId = id.split("-");
     id = salvaId[1];
@@ -15,10 +19,10 @@ function splitIdFromThis(splitId){
 /*
     prendo l'id numerico dell'elemento txtArea che mi interessa ed effettuo le operazioni di cui ho bisogno, restituisco txtArea alla funzione jQuery chiamante
 */
-function setTxtArea(id){
+function setTxtArea(id) {
     let txtArea = "#txt-" + id;
     //se modifica è falso, allora significa che la funzione jQuery chiamante è "salva"
-    if (modifica==false){
+    if (modifica == false) {
         //disabilito la possibilità di poter scrivere nella textarea
         $(txtArea).prop("disabled", true);
         //do una dimensione del 75% di altezza di tutta la note alla textarea
@@ -28,10 +32,10 @@ function setTxtArea(id){
         //riabilito la textArea in modo tale da poter effettuare modifiche alla nota
         $(txtArea).prop("disabled", false);
         /* riduco la dimensione della textarea al 40% sulla dimensione totale per fare spazio
-          ai bottoni per la dimensione del font e del colore */  
+          ai bottoni per la dimensione del font e del colore */
         $(txtArea).css("height", "40%");
     }
-    if (fontSize!=0){
+    if (fontSize != 0) {
         let setSize = 0;
         if (fontSize == "btns") setSize = "10px";
         else if (fontSize == "btnm") setSize = "18px";
@@ -39,7 +43,7 @@ function setTxtArea(id){
         $(txtArea).css("font-size", setSize);
         fontSize = 0;
     }
-    if(bgColor!=0){
+    if (bgColor != 0) {
         let colId = "#col-" + id;
         $(colId).css("background-color", bgColor);
         $(txtArea).css("background-color", bgColor);
@@ -48,11 +52,11 @@ function setTxtArea(id){
     return txtArea;
 }
 
-function showHideSalva(id){
+function showHideSalva(id) {
     let salvaId = "#salva-" + id;
     let fontDiv = "#fontdiv-" + id;
     let colorDiv = "#colordiv-" + id;
-    if (modifica==false){
+    if (modifica == false) {
         $(fontDiv).css("visibility", "hidden");
         $(colorDiv).css("visibility", "hidden");
         $(salvaId).hide();
@@ -66,14 +70,13 @@ function showHideSalva(id){
         $(eliminaBtn).hide();
         $(salvaId).text("Salva modifiche");
         $(salvaId).show();
-    }    
+    }
 }
 
-function creaDiv(id){
+function creaDiv(id) {
     let colore = randomColor();
-    if (n==5) $("#plus-circle-btn").hide();
     aggiungiDiv =
-    `   
+        `   
     <div class="col-sm-4" id="col-${id}" 
     style="background-color:${colore}; border:3px solid white;   border-collapse: collapse">
     <textarea class="txtarea mt-3" id="txt-${id}" 
@@ -105,7 +108,7 @@ function creaDiv(id){
     return aggiungiDiv;
 }
 
-function aggiungiModificaElimina(id, txtArea){
+function aggiungiModificaElimina(id, txtArea) {
     let aggiungiModificaElimina = ` <button type="button" id="modifica-${id}" 
                                     class="btn btn-sm bg-success text-white text-uppercase modifica">
                                     Modifica
@@ -119,14 +122,14 @@ function aggiungiModificaElimina(id, txtArea){
 }
 
 
-function randomColor(){
+function randomColor() {
     let colori = ["#ffb3ba", "#ffdfba", "#ffffba", "#baffc9", "#bae1ff", "#b7ded2"];
-    colore = colori[++n];
+    colore = colori[n];
     return colore;
 }
 
 $(document).ready(function () {
-    
+
     $("#plus-circle-btn").click(function (event) {
         event.preventDefault();
         idCorrente = counter;
@@ -136,10 +139,12 @@ $(document).ready(function () {
         aggiungiDiv = creaDiv(idCorrente);
         $("#aggiungi-qui").append(aggiungiDiv);
         $(txtArea).focus();
+        if (n == 5) $("#plus-circle-btn").hide();
+        n++;
     })
 
     $(document).on("click", ".salva", function () {
-        let id = splitIdFromThis(this);        
+        let id = splitIdFromThis(this);
         let txtArea = setTxtArea(id);
         showHideSalva(id);
         aggiungiModificaElimina(id, txtArea);
@@ -147,13 +152,13 @@ $(document).ready(function () {
 
     $(document).on("click", ".elimina", function () {
         $(this).parent().remove();
-        if (n==5) $("#plus-circle-btn").show();
-        n = n-1;
+        n = n - 1;
+        if (n == 5) $("#plus-circle-btn").show();
     });
 
     $(document).on("click", ".modifica", function () {
         modifica = true;
-        let id =  splitIdFromThis(this);
+        let id = splitIdFromThis(this);
         let txtArea = setTxtArea(id);
         showHideSalva(id);
         idCorrente = id;
@@ -161,13 +166,13 @@ $(document).ready(function () {
         modifica = false;
     });
 
-    $(document).on("click", ".fsize", function(){
+    $(document).on("click", ".fsize", function () {
         let id = $(this).attr("id");
         let fsizeId = id.split("-");
-        fontSize = fsizeId[0];        
+        fontSize = fsizeId[0];
     })
 
-    $(document).on("change", ".cambiacolore", function(){
+    $(document).on("change", ".cambiacolore", function () {
         let value = $(this).val();
         bgColor = value;
     })
